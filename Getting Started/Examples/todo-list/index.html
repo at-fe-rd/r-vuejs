@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Simple Vue.js to-do list demo">
+    <meta name="author" content="Mike Sprague">
+    <title>Simple Vue.js to-do list demo | &lt;/&gt; by Mike Sprague</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/darkly/bootstrap.min.css" rel="stylesheet" integrity="sha384-S7YMK1xjUjSpEnF4P8hPUcgjXYLZKK3fQW1j5ObLSl787II9p8RO9XUGehRmKsxd" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" integrity="sha256-j+P6EZJVrbXgwSR5Mx+eCS6FvP9Wq27MBRC/ogVriY0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="assets/css/styles.css">
+  </head>
+  <body>
+    <header class="container page-header">
+      <h1>Simple Vue.js To-do List App</h1>
+      <p class="lead">
+        Type text below and hit enter key to add new tasks. Click priority label on task to change it. Tasks sort by priority and when created.
+        <br>
+        <small> Demo uses browser's local storage - task list will persist between visits unless browser's cache is cleared.</small>
+      </p>
+    </header>
+    <div class="container" id="app">
+      <div class="row">
+        <div class="col-sm-12">
+          <todo-list></todo-list>
+        </div>
+      </div>
+    </div>
+    <template id="todo-list-template">
+      <div>
+        <input class="form-control input-lg" placeholder="What do you need to do?" v-model="newTask" @keypress.enter="addTodo()">
+        <hr>
+        <small>
+          <i class="fa fa-fw fa-bar-chart"></i>
+          <span v-show="!remainingTasks && completedTasks">No Tasks Remaining</span>
+          <span v-show="remainingTasks">{{ remainingTasks }} Remaining Task<span v-show="remainingTasks > 1 || remainingTasks === 0">s</span></span>
+          <span v-show="totalTasks > 1 && totalTasks > remainingTasks"> of {{ totalTasks }} Total Task<span v-show="totalTasks > 1 || totalTasks === 0">s</span></span>
+          <span v-show="!remainingTasks && !completedTasks">No Tasks in List</span>
+          <span v-show="completedTasks"> | <a class="text-warning" href="#" @click.prevent="clearCompleted"><i class="fa fa-fw fa-times"></i>Remove Completed Tasks from List</a></span>
+          <a class="text-danger pull-right" href="#" @click.prevent="resetApp">Reset to Default Demo Data<i class="fa fa-fw fa-refresh"></i></a>
+        </small>
+        <hr>
+        <ul class="list-group">
+          <li class="list-group-item animated flipInX" v-for="todo in tasks" todo="todo">
+            <div class="row">
+              <div class="col-sm-12">
+                <i :class="{ 'fa fa-fw fa-2x fa-circle-o task-check': !todo.completed, 'fa fa-fw fa-2x fa-check-circle-o text-success task-check': todo.completed }" @click="toggleTodoStatus( todo )"></i>
+                <span :class="{ 'task-text': !todo.completed, 'task-text task-completed text-success': todo.completed }" @click="toggleTodoStatus( todo )">
+                  {{ todo.task }}
+                </span>
+                <button class="btn btn-danger btn-sm pull-right" @click="deleteTodo( todo )"><i class="fa fa-2x fa-minus-circle"></i></button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <small class="priority-meta text-muted">
+                  Priority:
+                  <span @click="togglePriority( todo, 3 )" :class="{ 'label label-default priority-label inactive': todo.priority !== 3 , 'label label-info priority-label': todo.priority === 3 }"><i class="fa fa-chevron-down"></i> Low</span>
+                  <span @click="togglePriority( todo, 2 )" :class="{ 'label label-default priority-label inactive': todo.priority !== 2 , 'label label-primary priority-label': todo.priority === 2 }">Normal</span>
+                  <span @click="togglePriority( todo, 1 )" :class="{ 'label label-default priority-label inactive': todo.priority !== 1 , 'label label-danger priority-label': todo.priority === 1 }">High <i class="fa fa-chevron-up"></i></span>
+                  <span v-show="todo.created"><i class="fa fa-clock-o time-created"></i> Added <span class="timeago" :datetime="todo.created">{{ todo.created | timeago }}</span></span>
+                </small>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </template>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js" integrity="sha256-MbKnwYm5PqnQ9xLd0vK2C8vDJZA+PXKuNlmgJc+BG48=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.min.js" integrity="sha256-Cv5v4i4SuYvwRYzIONifZjoc99CkwfncROMSWat1cVA=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/2.0.4/timeago.min.js" integrity="sha256-34otvl+f6DWlliQUlAwT5hvizEJc8lPlNpW9T23pfGA=" crossorigin="anonymous"></script>
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>
