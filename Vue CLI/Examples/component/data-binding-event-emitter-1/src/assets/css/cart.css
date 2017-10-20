@@ -1,0 +1,25 @@
+.cart-box{
+  background-color: #f8f5f0;
+  padding: 0 20px;
+}
+
+.cart-item{
+  margin-bottom: 10px;
+}
+
+h2{
+  margin-top: 0;
+  padding-top: 20px;
+}
+.price-info{
+  padding: 0 40px;
+}
+.to-the-right{
+  float: right;
+}
+.btn{
+  margin-left: 10px;
+}
+ul{
+  list-style-type: none;
+}

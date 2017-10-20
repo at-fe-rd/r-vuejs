@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Example VueJS I</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+		crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+	<h1>Example VueJS</h1>
+	<div class="row mx-auto">
+		<div class="col-8">
+			<div id="addNew">
+				<div id="addNew" class="form-group">
+					<label for="fName">First Name</label>
+					<input v-model="firstName" type="text" class="form-control" id="fName">
+				</div>
+				<div class="form-group">
+					<label for="lName">Last Name</label>
+					<input v-model="lastName" type="text" class="form-control" id="lName">
+				</div>
+				<button type="submit" class="btn btn-primary" @click="addUser" v-bind:disabled="!isValid">Submit</button>
+			</div>
+			<br>
+			<div id="listUser">
+				<div class="">
+					<div class="input-group">
+						<span class="input-group-btn">
+									<button class="btn btn-secondary" type="button">Go!</button>
+								</span>
+						<input type="text" v-model="search" class="form-control" placeholder="Search for..." aria-label="Search for...">
+					</div>
+				</div>
+				<br>
+				<table class="table">
+					<thead class="thead-default">
+						<tr>
+							<th>#</th>
+							<th>First Name</th>
+							<th>Last Name</th>
+							<!-- <th>Username</th> -->
+							<th>Email</th>
+							<th>Option</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="(user, i) in searchUser(users, search) ">
+							<th scope="row">{{i}}</th>
+							<td>{{user.fn | capitalize }} </td>
+							<td>{{user.ln | capitalize}} </td>
+							<!-- <td>{{user| formName}}</td> -->
+							<td>{{user.email}}</td>
+							<td>
+								<button type="button" class="btn btn-danger btn-sm" @click="deleteUser(i)"><i class="fa fa-window-close" aria-hidden="true"></i></button>
+								<button type="button" class="btn btn-success btn-sm" @click="editUser(i)"><i class="fa fa-pencil-square" aria-hidden="true"></i></button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+		</ div>
+		<script>
+			window.onload = function () {
+				let listUser = [
+					user = {
+						fn: 'map',
+						ln: 'nguyen',
+						email: 'map.nguyen@asiantech.vn'
+					},
+					user = {
+						fn: 'mam',
+						ln: 'tran',
+						email: 'mam.tran@asiantech.vn'
+					},
+				];
+				let flag = -1;
+				let submit = new Vue({
+					el: '#addNew',
+					data: {
+						firstName: '',
+						lastName: ''
+					},
+					methods: {
+						addUser: () => {
+							if (flag === -1) {
+								if (submit.firstName !== '' && submit.lastName !== '') {
+									console.log(submit.lastName);
+									let user = {
+										// id:
+										fn: submit.firstName.toLowerCase(),
+										ln: submit.lastName.toLowerCase(),
+										email: submit.emailUser(submit.firstName.toLowerCase(), submit.lastName.toLowerCase())
+									};
+									listUser.push(user);
+								}
+								submit.reset();
+							} else {
+								listUser[flag].fn = submit.firstName;
+								listUser[flag].ln = submit.lastName;
+								listUser[flag].email = submit.emailUser(submit.firstName, submit.lastName);
+								submit.reset();
+							}
+						},
+						reset: () => {
+							submit.firstName = '';
+							submit.lastName = '';
+							flag = -1;
+						},
+						emailUser: (fisrtName, lastName) => {
+							serial = 0;
+							lname = lastName.split(' ')[0];
+							listUser.forEach(ele => {
+								if (ele.fn === fisrtName && ele.ln.split(' ')[0] === lname) {
+									serial++;
+								}
+							})
+							serial = flag !== -1 ? serial - 1 : serial;
+							return `${fisrtName}.${lname}${serial === 0 ? '' : serial}@asiantech.vn`;
+						}
+					},
+					computed: {
+						isValid: function () {
+							return this.firstName != '' && this.lastName != ''
+						}
+					}
+				});
+
+				let list = new Vue({
+					el: '#listUser',
+					data: {
+						users: listUser,
+						search: ''
+					},
+					filters: {
+						capitalize: function (value) {
+							if (!value) return '';
+
+							let arr = value.split(' ');
+							arr2 = arr.map(ele => {
+								return ele.charAt(0).toUpperCase() + ele.slice(1);
+							})
+							value = value.toString()
+							return arr2.length >= 2 ? arr2.join(' ') : arr2.join();
+						},
+						formName: (user) => {
+							arr = user.ln.split(' ');
+							arr.forEach(ele => {
+
+							})
+							return serial === 0 ? `${user.fn}.${lname}` : `${user.fn}.${lname}${serial}`;
+						},
+					},
+					computed: {
+					},
+					methods: {
+						editUser: function(id) {
+							flag = id;
+							console.log(id);
+							submit.firstName = listUser[flag].fn;
+							submit.lastName = listUser[flag].ln;
+						},
+						deleteUser: function(id) {
+							listUser.splice(id,1);
+							submit.reset();
+						},
+						searchUser: (listUser, key) => {
+							return !key ? listUser : listUser.filter(user => user.fn.toLowerCase().indexOf(key.toLowerCase()) > -1)
+						},
+					}
+				})
+			}
+		</script>
+
+		<script language="javascript" src="https://unpkg.com/vue"></script>
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+			crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+			crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+			crossorigin="anonymous"></script>
+</body>
+
+</html>
