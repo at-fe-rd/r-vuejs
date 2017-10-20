@@ -1182,8 +1182,13 @@ var vmB = new Vue({
 #### 5.2 Vuex
 - Vuex is a library helps us manage the state of components in Vue.js. It holds all state of components and manage them in the global app. Component will become view and can access state or trigger actions. With this ways, the source code will be structured and maintained easily.
 - Vuex is devided into so many parts:
+
 -- **State**: Vuex use only one stated tree, this object will hold the state of app, this means we just have one warehouse for one app.
+
 -- **Action**: it contains the actions likes getting the api data from server or changing the data in DB..... Action can contain the **async** function.  Each action will be triggered when using  store.dispatch
+
 --  **Mutation**:  The state cannot change directly, they just can change through commit. Each commit is an action. Maybe it seem likes an event, each mutation have a string type and a handler.  Each mutation will be triggered when using  store.commit
+
 -- **Getters**: Sometimes we have to get the stature based on calculating, filter the states provided by storage.
+
 -- **Module**: Vuex sue only one stated tree, all states of app will given to an object, so when developing of app, store will be blow up. So we have to devide the store into some smaller module, each module also have state, mutations, actions, getter, and event have another module.
