@@ -1,6 +1,5 @@
-#r-vuejs
 
-#Vue. js Document
+# Vue. js Document
 
 @(FE)[Vue | Oct 11th 2017 | Asian Tech ]
 
